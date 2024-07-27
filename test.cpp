@@ -11,14 +11,14 @@ public:
 
     // Method to check-in a mentor
     void checkIn() {
-        availability = true;
-        std::cout << name << " has checked in." << std::endl;
+        this->availability = true; // Using 'this' pointer
+        std::cout << this->name << " has checked in." << std::endl; // Using 'this' pointer
     }
 
     // Method to check-out a mentor
     void checkOut() {
-        availability = false;
-        std::cout << name << " has checked out." << std::endl;
+        this->availability = false; // Using 'this' pointer
+        std::cout << this->name << " has checked out." << std::endl; // Using 'this' pointer
     }
 };
 
@@ -32,14 +32,14 @@ public:
 
     // Method to check-in a mentee
     void checkIn() {
-        availability = true;
-        std::cout << name << " has checked in." << std::endl;
+        this->availability = true; // Using 'this' pointer
+        std::cout << this->name << " has checked in." << std::endl; // Using 'this' pointer
     }
 
     // Method to check-out a mentee
     void checkOut() {
-        availability = false;
-        std::cout << name << " has checked out." << std::endl;
+        this->availability = false; // Using 'this' pointer
+        std::cout << this->name << " has checked out." << std::endl; // Using 'this' pointer
     }
 };
 
