@@ -44,37 +44,55 @@ public:
 };
 
 int main() {
-    // Creating a Mentor object
-    Mentor mentor1;
-    std::cout << "Enter Mentor's Name: ";
-    std::getline(std::cin, mentor1.name);
-    std::cout << "Enter Mentor's Type (Technical/Program): ";
-    std::getline(std::cin, mentor1.type);
-    std::cout << "Enter Mentor's Expertise: ";
-    std::getline(std::cin, mentor1.expertise);
-    std::cout << "Enter Mentor's Contact Number: ";
-    std::getline(std::cin, mentor1.contactNumber);
-    mentor1.availability = false;
+    const int size = 2;
+    
+    // Creating an array of Mentor objects
+    Mentor mentors[size];
+    for (int i = 0; i < size; ++i) {
+        std::cout << "Enter Mentor " << i + 1 << "'s Name: ";
+        std::getline(std::cin, mentors[i].name);
+        std::cout << "Enter Mentor " << i + 1 << "'s Type (Technical/Program): ";
+        std::getline(std::cin, mentors[i].type);
+        std::cout << "Enter Mentor " << i + 1 << "'s Expertise: ";
+        std::getline(std::cin, mentors[i].expertise);
+        std::cout << "Enter Mentor " << i + 1 << "'s Contact Number: ";
+        std::getline(std::cin, mentors[i].contactNumber);
+        mentors[i].availability = false;
+    }
 
-    // Creating a Mentee object
-    Mentee mentee1;
-    std::cout << "Enter Mentee's Name: ";
-    std::getline(std::cin, mentee1.name);
-    std::cout << "Enter Mentee's Type (Technical/Program): ";
-    std::getline(std::cin, mentee1.type);
-    std::cout << "Enter Mentee's Expertise: ";
-    std::getline(std::cin, mentee1.expertise);
-    std::cout << "Enter Mentee's Contact Number: ";
-    std::getline(std::cin, mentee1.contactNumber);
-    mentee1.availability = false;
+    // Creating an array of Mentee objects
+    Mentee mentees[size];
+    for (int i = 0; i < size; ++i) {
+        std::cout << "Enter Mentee " << i + 1 << "'s Name: ";
+        std::getline(std::cin, mentees[i].name);
+        std::cout << "Enter Mentee " << i + 1 << "'s Type (Technical/Program): ";
+        std::getline(std::cin, mentees[i].type);
+        std::cout << "Enter Mentee " << i + 1 << "'s Expertise: ";
+        std::getline(std::cin, mentees[i].expertise);
+        std::cout << "Enter Mentee " << i + 1 << "'s Contact Number: ";
+        std::getline(std::cin, mentees[i].contactNumber);
+        mentees[i].availability = false;
+    }
 
-    // Checking in the mentor and mentee
-    mentor1.checkIn();
-    mentee1.checkIn();
+    // Checking in the mentors
+    for (int i = 0; i < size; ++i) {
+        mentors[i].checkIn();
+    }
 
-    // Checking out the mentor and mentee
-    mentor1.checkOut();
-    mentee1.checkOut();
+    // Checking in the mentees
+    for (int i = 0; i < size; ++i) {
+        mentees[i].checkIn();
+    }
+
+    // Checking out the mentors
+    for (int i = 0; i < size; ++i) {
+        mentors[i].checkOut();
+    }
+
+    // Checking out the mentees
+    for (int i = 0; i < size; ++i) {
+        mentees[i].checkOut();
+    }
 
     return 0;
 }
