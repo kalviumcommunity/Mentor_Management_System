@@ -9,6 +9,8 @@ public:
     std::string contactNumber;
     bool availability;
 
+    Mentor() : availability(false) {} // Constructor
+
     // Method to check-in a mentor
     void checkIn() {
         this->availability = true; // Using 'this' pointer
@@ -30,6 +32,8 @@ public:
     std::string contactNumber;
     bool availability;
 
+    Mentee() : availability(false) {} // Constructor
+
     // Method to check-in a mentee
     void checkIn() {
         this->availability = true; // Using 'this' pointer
@@ -45,9 +49,10 @@ public:
 
 int main() {
     const int size = 2;
+
+    // Creating an array of Mentor objects dynamically
+    Mentor* mentors = new Mentor[size];
     
-    // Creating an array of Mentor objects
-    Mentor mentors[size];
     for (int i = 0; i < size; ++i) {
         std::cout << "Enter Mentor " << i + 1 << "'s Name: ";
         std::getline(std::cin, mentors[i].name);
@@ -57,11 +62,10 @@ int main() {
         std::getline(std::cin, mentors[i].expertise);
         std::cout << "Enter Mentor " << i + 1 << "'s Contact Number: ";
         std::getline(std::cin, mentors[i].contactNumber);
-        mentors[i].availability = false;
     }
 
-    // Creating an array of Mentee objects
-    Mentee mentees[size];
+    // Creating an array of Mentee objects dynamically
+    Mentee* mentees = new Mentee[size];
     for (int i = 0; i < size; ++i) {
         std::cout << "Enter Mentee " << i + 1 << "'s Name: ";
         std::getline(std::cin, mentees[i].name);
@@ -71,7 +75,6 @@ int main() {
         std::getline(std::cin, mentees[i].expertise);
         std::cout << "Enter Mentee " << i + 1 << "'s Contact Number: ";
         std::getline(std::cin, mentees[i].contactNumber);
-        mentees[i].availability = false;
     }
 
     // Checking in the mentors
@@ -93,6 +96,10 @@ int main() {
     for (int i = 0; i < size; ++i) {
         mentees[i].checkOut();
     }
+
+    // Deleting dynamically allocated memory
+    delete[] mentors;
+    delete[] mentees;
 
     return 0;
 }
