@@ -9,7 +9,17 @@ public:
     std::string contactNumber;
     bool availability;
 
-    Mentor() : availability(false) {} // Constructor
+    // Static variable to keep track of the number of Mentors
+    static int mentorCount;
+
+    Mentor() : availability(false) {
+        ++mentorCount; // Increment the static count when a Mentor is created
+    }
+
+    // Destructor to decrement the static count when a Mentor is deleted
+    ~Mentor() {
+        --mentorCount;
+    }
 
     // Method to check-in a mentor
     void checkIn() {
@@ -22,7 +32,15 @@ public:
         this->availability = false; // Using 'this' pointer
         std::cout << this->name << " has checked out." << std::endl; // Using 'this' pointer
     }
+
+    // Static method to get the current number of Mentors
+    static int getMentorCount() {
+        return mentorCount;
+    }
 };
+
+// Initialize the static variable
+int Mentor::mentorCount = 0;
 
 class Mentee {
 public:
@@ -32,7 +50,17 @@ public:
     std::string contactNumber;
     bool availability;
 
-    Mentee() : availability(false) {} // Constructor
+    // Static variable to keep track of the number of Mentees
+    static int menteeCount;
+
+    Mentee() : availability(false) {
+        ++menteeCount; // Increment the static count when a Mentee is created
+    }
+
+    // Destructor to decrement the static count when a Mentee is deleted
+    ~Mentee() {
+        --menteeCount;
+    }
 
     // Method to check-in a mentee
     void checkIn() {
@@ -45,7 +73,15 @@ public:
         this->availability = false; // Using 'this' pointer
         std::cout << this->name << " has checked out." << std::endl; // Using 'this' pointer
     }
+
+    // Static method to get the current number of Mentees
+    static int getMenteeCount() {
+        return menteeCount;
+    }
 };
+
+// Initialize the static variable
+int Mentee::menteeCount = 0;
 
 int main() {
     const int size = 2;
@@ -96,6 +132,10 @@ int main() {
     for (int i = 0; i < size; ++i) {
         mentees[i].checkOut();
     }
+
+    // Display the number of mentors and mentees
+    std::cout << "Current number of Mentors: " << Mentor::getMentorCount() << std::endl;
+    std::cout << "Current number of Mentees: " << Mentee::getMenteeCount() << std::endl;
 
     // Deleting dynamically allocated memory
     delete[] mentors;
