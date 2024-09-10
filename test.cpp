@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm> // For std::find
 
 class Mentor {
 private:
@@ -15,18 +16,22 @@ private:
     static std::vector<Mentor*> mentorList; // Static vector to hold all Mentor instances
 
 public:
+    // Constructor to initialize availability and increment mentorCount
     Mentor() : availability(false) {
         ++mentorCount; // Increment the static count when a Mentor is created
         mentorList.push_back(this); // Add this Mentor to the list
     }
 
-    // Destructor to decrement the static count when a Mentor is deleted
+    // Destructor to decrement mentorCount and remove the Mentor from the list
     ~Mentor() {
         --mentorCount;
-        mentorList.erase(std::remove(mentorList.begin(), mentorList.end(), this), mentorList.end()); // Remove this Mentor from the list
+        auto it = std::find(mentorList.begin(), mentorList.end(), this);
+        if (it != mentorList.end()) {
+            mentorList.erase(it);
+        }
     }
 
-    // Static method to display all mentors
+    // Static member function to display all mentors
     static void displayMentors() {
         std::cout << "List of Mentors:" << std::endl;
         for (const auto& mentor : mentorList) {
@@ -36,6 +41,12 @@ public:
         }
     }
 
+    // Static function to get the total number of Mentors
+    static int getMentorCount() {
+        return mentorCount;
+    }
+
+    // Encapsulation through getter and setter methods
     // Accessor methods (Getters)
     std::string getName() const { return name; }
     std::string getType() const { return type; }
@@ -51,19 +62,14 @@ public:
 
     // Method to check-in a mentor
     void checkIn() {
-        this->availability = true;
-        std::cout << this->name << " has checked in." << std::endl;
+        availability = true;
+        std::cout << name << " has checked in." << std::endl;
     }
 
     // Method to check-out a mentor
     void checkOut() {
-        this->availability = false;
-        std::cout << this->name << " has checked out." << std::endl;
-    }
-
-    // Static method to get the current number of Mentors
-    static int getMentorCount() {
-        return mentorCount;
+        availability = false;
+        std::cout << name << " has checked out." << std::endl;
     }
 };
 
@@ -84,18 +90,22 @@ private:
     static std::vector<Mentee*> menteeList; // Static vector to hold all Mentee instances
 
 public:
+    // Constructor to initialize availability and increment menteeCount
     Mentee() : availability(false) {
         ++menteeCount; // Increment the static count when a Mentee is created
         menteeList.push_back(this); // Add this Mentee to the list
     }
 
-    // Destructor to decrement the static count when a Mentee is deleted
+    // Destructor to decrement menteeCount and remove the Mentee from the list
     ~Mentee() {
         --menteeCount;
-        menteeList.erase(std::remove(menteeList.begin(), menteeList.end(), this), menteeList.end()); // Remove this Mentee from the list
+        auto it = std::find(menteeList.begin(), menteeList.end(), this);
+        if (it != menteeList.end()) {
+            menteeList.erase(it);
+        }
     }
 
-    // Static method to display all mentees
+    // Static member function to display all mentees
     static void displayMentees() {
         std::cout << "List of Mentees:" << std::endl;
         for (const auto& mentee : menteeList) {
@@ -105,6 +115,12 @@ public:
         }
     }
 
+    // Static function to get the total number of Mentees
+    static int getMenteeCount() {
+        return menteeCount;
+    }
+
+    // Encapsulation through getter and setter methods
     // Accessor methods (Getters)
     std::string getName() const { return name; }
     std::string getType() const { return type; }
@@ -120,19 +136,14 @@ public:
 
     // Method to check-in a mentee
     void checkIn() {
-        this->availability = true;
-        std::cout << this->name << " has checked in." << std::endl;
+        availability = true;
+        std::cout << name << " has checked in." << std::endl;
     }
 
     // Method to check-out a mentee
     void checkOut() {
-        this->availability = false;
-        std::cout << this->name << " has checked out." << std::endl;
-    }
-
-    // Static method to get the current number of Mentees
-    static int getMenteeCount() {
-        return menteeCount;
+        availability = false;
+        std::cout << name << " has checked out." << std::endl;
     }
 };
 
@@ -213,10 +224,10 @@ int main() {
     }
 
     // Display the number of mentors and mentees
-    std::cout << "Current number of Mentors: " << Mentor::getMentorCount() << std::endl;
-    std::cout << "Current number of Mentees: " << Mentee::getMenteeCount() << std::endl;
+    std::cout << "Total Mentors: " << Mentor::getMentorCount() << std::endl;
+    std::cout << "Total Mentees: " << Mentee::getMenteeCount() << std::endl;
 
-    // Free the dynamically allocated memory
+    // Clean up dynamically allocated memory
     delete[] mentors;
     delete[] mentees;
 
