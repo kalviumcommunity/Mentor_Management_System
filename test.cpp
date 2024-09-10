@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Mentor {
 private:
@@ -11,15 +12,28 @@ private:
 
     // Static variable to keep track of the number of Mentors
     static int mentorCount;
+    static std::vector<Mentor*> mentorList; // Static vector to hold all Mentor instances
 
 public:
     Mentor() : availability(false) {
         ++mentorCount; // Increment the static count when a Mentor is created
+        mentorList.push_back(this); // Add this Mentor to the list
     }
 
     // Destructor to decrement the static count when a Mentor is deleted
     ~Mentor() {
         --mentorCount;
+        mentorList.erase(std::remove(mentorList.begin(), mentorList.end(), this), mentorList.end()); // Remove this Mentor from the list
+    }
+
+    // Static method to display all mentors
+    static void displayMentors() {
+        std::cout << "List of Mentors:" << std::endl;
+        for (const auto& mentor : mentorList) {
+            std::cout << "Name: " << mentor->getName() << ", Type: " << mentor->getType() 
+                      << ", Expertise: " << mentor->getExpertise() 
+                      << ", Contact: " << mentor->getContactNumber() << std::endl;
+        }
     }
 
     // Accessor methods (Getters)
@@ -53,8 +67,9 @@ public:
     }
 };
 
-// Initialize the static variable
+// Initialize the static variables
 int Mentor::mentorCount = 0;
+std::vector<Mentor*> Mentor::mentorList;
 
 class Mentee {
 private:
@@ -66,15 +81,28 @@ private:
 
     // Static variable to keep track of the number of Mentees
     static int menteeCount;
+    static std::vector<Mentee*> menteeList; // Static vector to hold all Mentee instances
 
 public:
     Mentee() : availability(false) {
         ++menteeCount; // Increment the static count when a Mentee is created
+        menteeList.push_back(this); // Add this Mentee to the list
     }
 
     // Destructor to decrement the static count when a Mentee is deleted
     ~Mentee() {
         --menteeCount;
+        menteeList.erase(std::remove(menteeList.begin(), menteeList.end(), this), menteeList.end()); // Remove this Mentee from the list
+    }
+
+    // Static method to display all mentees
+    static void displayMentees() {
+        std::cout << "List of Mentees:" << std::endl;
+        for (const auto& mentee : menteeList) {
+            std::cout << "Name: " << mentee->getName() << ", Type: " << mentee->getType() 
+                      << ", Expertise: " << mentee->getExpertise() 
+                      << ", Contact: " << mentee->getContactNumber() << std::endl;
+        }
     }
 
     // Accessor methods (Getters)
@@ -108,8 +136,9 @@ public:
     }
 };
 
-// Initialize the static variable
+// Initialize the static variables
 int Mentee::menteeCount = 0;
+std::vector<Mentee*> Mentee::menteeList;
 
 int main() {
     const int size = 2;
@@ -169,6 +198,10 @@ int main() {
         mentees[i].checkIn();
     }
 
+    // Display the list of mentors and mentees
+    Mentor::displayMentors();
+    Mentee::displayMentees();
+
     // Checking out the mentors
     for (int i = 0; i < size; ++i) {
         mentors[i].checkOut();
@@ -183,7 +216,7 @@ int main() {
     std::cout << "Current number of Mentors: " << Mentor::getMentorCount() << std::endl;
     std::cout << "Current number of Mentees: " << Mentee::getMenteeCount() << std::endl;
 
-    // Deleting dynamically allocated memory
+    // Free the dynamically allocated memory
     delete[] mentors;
     delete[] mentees;
 
