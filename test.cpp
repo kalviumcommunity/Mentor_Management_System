@@ -17,6 +17,7 @@ private:
 
 public:
     // Constructor to initialize availability and increment mentorCount
+    // used constructor
     Mentor() : availability(false) {
         ++mentorCount; // Increment the static count when a Mentor is created
         mentorList.push_back(this); // Add this Mentor to the list
@@ -233,3 +234,16 @@ int main() {
 
     return 0;
 }
+
+
+
+// Demonstrating the Access Specifiers:
+// Private Members:
+
+// In both classes, name, type, expertise, contactNumber, and availability are private. 
+//This ensures that these attributes can only be accessed or modified through the provided public methods, 
+//which encapsulate the details of the implementation.
+// Public Methods:
+
+// The public methods (getName(), setName(), checkIn(), etc.) allow the outside world to interact with these private members in a controlled way.
+// This helps in protecting the data and providing only the necessary operations, implementing abstraction.
