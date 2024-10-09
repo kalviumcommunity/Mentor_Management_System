@@ -1,29 +1,68 @@
 #include <iostream>
-#include <string>
 #include <vector>
-#include <algorithm> // For std::find
+#include <algorithm>
+#include <string>
 
-class Mentor {
-private:
+// Base Class
+//Base Class (Person):
+// This class will have attributes and methods common to both Mentor and Mentee.
+
+
+class Person {
+protected:
     std::string name;
-    std::string type; // Technical or Program
-    std::string expertise;
     std::string contactNumber;
     bool availability;
 
-    // Static variable to keep track of the number of Mentors
-    static int mentorCount;
-    static std::vector<Mentor*> mentorList; // Static vector to hold all Mentor instances
-
 public:
-    // Constructor to initialize availability and increment mentorCount
-    // used constructor
-    Mentor() : availability(false) {
-        ++mentorCount; // Increment the static count when a Mentor is created
-        mentorList.push_back(this); // Add this Mentor to the list
+    // Constructor
+    Person() : availability(false) {}
+
+    // Destructor
+    virtual ~Person() {}
+
+    // Accessor and Mutator Methods
+    std::string getName() const { return name; }
+    void setName(const std::string& personName) { name = personName; }
+
+    std::string getContactNumber() const { return contactNumber; }
+    void setContactNumber(const std::string& personContact) { contactNumber = personContact; }
+
+    bool isAvailable() const { return availability; }
+
+    // Method to check-in a person
+    void checkIn() {
+        availability = true;
+        std::cout << name << " has checked in." << std::endl;
     }
 
-    // Destructor to decrement mentorCount and remove the Mentor from the list
+    // Method to check-out a person
+    void checkOut() {
+        availability = false;
+        std::cout << name << " has checked out." << std::endl;
+    }
+};
+
+// Derived Class: Mentor
+// 2. Derived Classes (Mentor and Mentee):
+//Both Mentor and Mentee inherit from Person, demonstrating single inheritance. 
+//Mentor and Mentee also add their specific attributes, demonstrating hierarchical inheritance.
+class Mentor : public Person {
+private:
+    std::string type; // Technical or Program
+    std::string expertise;
+
+    static int mentorCount;
+    static std::vector<Mentor*> mentorList;
+
+public:
+    // Constructor
+    Mentor() {
+        ++mentorCount;
+        mentorList.push_back(this);
+    }
+
+    // Destructor
     ~Mentor() {
         --mentorCount;
         auto it = std::find(mentorList.begin(), mentorList.end(), this);
@@ -32,7 +71,14 @@ public:
         }
     }
 
-    // Static member function to display all mentors
+    // Accessor and Mutator Methods for Mentor-specific attributes
+    std::string getType() const { return type; }
+    void setType(const std::string& mentorType) { type = mentorType; }
+
+    std::string getExpertise() const { return expertise; }
+    void setExpertise(const std::string& mentorExpertise) { expertise = mentorExpertise; }
+
+    // Static function to display all mentors
     static void displayMentors() {
         std::cout << "List of Mentors:" << std::endl;
         for (const auto& mentor : mentorList) {
@@ -42,62 +88,33 @@ public:
         }
     }
 
-    // Static function to get the total number of Mentors
+    // Static function to get the total number of mentors
     static int getMentorCount() {
         return mentorCount;
     }
-
-    // Encapsulation through getter and setter methods
-    // Accessor methods (Getters)
-    std::string getName() const { return name; }
-    std::string getType() const { return type; }
-    std::string getExpertise() const { return expertise; }
-    std::string getContactNumber() const { return contactNumber; }
-    bool isAvailable() const { return availability; }
-
-    // Mutator methods (Setters)
-    void setName(const std::string& mentorName) { name = mentorName; }
-    void setType(const std::string& mentorType) { type = mentorType; }
-    void setExpertise(const std::string& mentorExpertise) { expertise = mentorExpertise; }
-    void setContactNumber(const std::string& mentorContact) { contactNumber = mentorContact; }
-
-    // Method to check-in a mentor
-    void checkIn() {
-        availability = true;
-        std::cout << name << " has checked in." << std::endl;
-    }
-
-    // Method to check-out a mentor
-    void checkOut() {
-        availability = false;
-        std::cout << name << " has checked out." << std::endl;
-    }
 };
 
-// Initialize the static variables
+// Static member initialization for Mentor class
 int Mentor::mentorCount = 0;
 std::vector<Mentor*> Mentor::mentorList;
 
-class Mentee {
+// Derived Class: Mentee
+class Mentee : public Person {
 private:
-    std::string name;
     std::string type; // Technical or Program
     std::string expertise;
-    std::string contactNumber;
-    bool availability;
 
-    // Static variable to keep track of the number of Mentees
     static int menteeCount;
-    static std::vector<Mentee*> menteeList; // Static vector to hold all Mentee instances
+    static std::vector<Mentee*> menteeList;
 
 public:
-    // Constructor to initialize availability and increment menteeCount
-    Mentee() : availability(false) {
-        ++menteeCount; // Increment the static count when a Mentee is created
-        menteeList.push_back(this); // Add this Mentee to the list
+    // Constructor
+    Mentee() {
+        ++menteeCount;
+        menteeList.push_back(this);
     }
 
-    // Destructor to decrement menteeCount and remove the Mentee from the list
+    // Destructor
     ~Mentee() {
         --menteeCount;
         auto it = std::find(menteeList.begin(), menteeList.end(), this);
@@ -106,7 +123,14 @@ public:
         }
     }
 
-    // Static member function to display all mentees
+    // Accessor and Mutator Methods for Mentee-specific attributes
+    std::string getType() const { return type; }
+    void setType(const std::string& menteeType) { type = menteeType; }
+
+    std::string getExpertise() const { return expertise; }
+    void setExpertise(const std::string& menteeExpertise) { expertise = menteeExpertise; }
+
+    // Static function to display all mentees
     static void displayMentees() {
         std::cout << "List of Mentees:" << std::endl;
         for (const auto& mentee : menteeList) {
@@ -116,134 +140,59 @@ public:
         }
     }
 
-    // Static function to get the total number of Mentees
+    // Static function to get the total number of mentees
     static int getMenteeCount() {
         return menteeCount;
     }
-
-    // Encapsulation through getter and setter methods
-    // Accessor methods (Getters)
-    std::string getName() const { return name; }
-    std::string getType() const { return type; }
-    std::string getExpertise() const { return expertise; }
-    std::string getContactNumber() const { return contactNumber; }
-    bool isAvailable() const { return availability; }
-
-    // Mutator methods (Setters)
-    void setName(const std::string& menteeName) { name = menteeName; }
-    void setType(const std::string& menteeType) { type = menteeType; }
-    void setExpertise(const std::string& menteeExpertise) { expertise = menteeExpertise; }
-    void setContactNumber(const std::string& menteeContact) { contactNumber = menteeContact; }
-
-    // Method to check-in a mentee
-    void checkIn() {
-        availability = true;
-        std::cout << name << " has checked in." << std::endl;
-    }
-
-    // Method to check-out a mentee
-    void checkOut() {
-        availability = false;
-        std::cout << name << " has checked out." << std::endl;
-    }
 };
 
-// Initialize the static variables
+// Static member initialization for Mentee class
 int Mentee::menteeCount = 0;
 std::vector<Mentee*> Mentee::menteeList;
 
+// Main function
 int main() {
-    const int size = 2;
+    // Creating Mentor objects
+    Mentor mentor1;
+    mentor1.setName("Alice");
+    mentor1.setContactNumber("123-456-7890");
+    mentor1.setType("Technical");
+    mentor1.setExpertise("C++");
 
-    // Creating an array of Mentor objects dynamically
-    Mentor* mentors = new Mentor[size];
+    Mentor mentor2;
+    mentor2.setName("Bob");
+    mentor2.setContactNumber("987-654-3210");
+    mentor2.setType("Program");
+    mentor2.setExpertise("Java");
 
-    for (int i = 0; i < size; ++i) {
-        std::string name, type, expertise, contactNumber;
+    // Creating Mentee objects
+    Mentee mentee1;
+    mentee1.setName("Charlie");
+    mentee1.setContactNumber("111-222-3333");
+    mentee1.setType("Technical");
+    mentee1.setExpertise("Python");
 
-        std::cout << "Enter Mentor " << i + 1 << "'s Name: ";
-        std::getline(std::cin, name);
-        mentors[i].setName(name);
+    Mentee mentee2;
+    mentee2.setName("David");
+    mentee2.setContactNumber("444-555-6666");
+    mentee2.setType("Program");
+    mentee2.setExpertise("Data Science");
 
-        std::cout << "Enter Mentor " << i + 1 << "'s Type (Technical/Program): ";
-        std::getline(std::cin, type);
-        mentors[i].setType(type);
+    // Checking in mentors and mentees
+    mentor1.checkIn();
+    mentee1.checkIn();
 
-        std::cout << "Enter Mentor " << i + 1 << "'s Expertise: ";
-        std::getline(std::cin, expertise);
-        mentors[i].setExpertise(expertise);
-
-        std::cout << "Enter Mentor " << i + 1 << "'s Contact Number: ";
-        std::getline(std::cin, contactNumber);
-        mentors[i].setContactNumber(contactNumber);
-    }
-
-    // Creating an array of Mentee objects dynamically
-    Mentee* mentees = new Mentee[size];
-    for (int i = 0; i < size; ++i) {
-        std::string name, type, expertise, contactNumber;
-
-        std::cout << "Enter Mentee " << i + 1 << "'s Name: ";
-        std::getline(std::cin, name);
-        mentees[i].setName(name);
-
-        std::cout << "Enter Mentee " << i + 1 << "'s Type (Technical/Program): ";
-        std::getline(std::cin, type);
-        mentees[i].setType(type);
-
-        std::cout << "Enter Mentee " << i + 1 << "'s Expertise: ";
-        std::getline(std::cin, expertise);
-        mentees[i].setExpertise(expertise);
-
-        std::cout << "Enter Mentee " << i + 1 << "'s Contact Number: ";
-        std::getline(std::cin, contactNumber);
-        mentees[i].setContactNumber(contactNumber);
-    }
-
-    // Checking in the mentors
-    for (int i = 0; i < size; ++i) {
-        mentors[i].checkIn();
-    }
-
-    // Checking in the mentees
-    for (int i = 0; i < size; ++i) {
-        mentees[i].checkIn();
-    }
-
-    // Display the list of mentors and mentees
+    // Display lists of Mentors and Mentees
     Mentor::displayMentors();
     Mentee::displayMentees();
 
-    // Checking out the mentors
-    for (int i = 0; i < size; ++i) {
-        mentors[i].checkOut();
-    }
-
-    // Checking out the mentees
-    for (int i = 0; i < size; ++i) {
-        mentees[i].checkOut();
-    }
-
-    // Display the number of mentors and mentees
+    // Display counts
     std::cout << "Total Mentors: " << Mentor::getMentorCount() << std::endl;
     std::cout << "Total Mentees: " << Mentee::getMenteeCount() << std::endl;
 
-    // Clean up dynamically allocated memory
-    delete[] mentors;
-    delete[] mentees;
+    // Checking out a person
+    mentor1.checkOut();
+    mentee1.checkOut();
 
     return 0;
 }
-
-
-
-// Demonstrating the Access Specifiers:
-// Private Members:
-
-// In both classes, name, type, expertise, contactNumber, and availability are private. 
-//This ensures that these attributes can only be accessed or modified through the provided public methods, 
-//which encapsulate the details of the implementation.
-// Public Methods:
-
-// The public methods (getName(), setName(), checkIn(), etc.) allow the outside world to interact with these private members in a controlled way.
-// This helps in protecting the data and providing only the necessary operations, implementing abstraction.
