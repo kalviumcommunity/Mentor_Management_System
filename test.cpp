@@ -3,11 +3,7 @@
 #include <algorithm>
 #include <string>
 
-// Base Class
-//Base Class (Person):
-// This class will have attributes and methods common to both Mentor and Mentee.
-
-
+// Base Class (Person)
 class Person {
 protected:
     std::string name;
@@ -30,26 +26,23 @@ public:
 
     bool isAvailable() const { return availability; }
 
-    // Method to check-in a person
-    void checkIn() {
+    // Virtual method to check-in a person (can be overridden)
+    virtual void checkIn() {
         availability = true;
-        std::cout << name << " has checked in." << std::endl;
+        std::cout << name << " has checked in (Person)." << std::endl;
     }
 
-    // Method to check-out a person
-    void checkOut() {
+    // Virtual method to check-out a person (can be overridden)
+    virtual void checkOut() {
         availability = false;
-        std::cout << name << " has checked out." << std::endl;
+        std::cout << name << " has checked out (Person)." << std::endl;
     }
 };
 
 // Derived Class: Mentor
-// 2. Derived Classes (Mentor and Mentee):
-//Both Mentor and Mentee inherit from Person, demonstrating single inheritance. 
-//Mentor and Mentee also add their specific attributes, demonstrating hierarchical inheritance.
 class Mentor : public Person {
 private:
-    std::string type; // Technical or Program
+    std::string type;  // Technical or Program
     std::string expertise;
 
     static int mentorCount;
@@ -76,7 +69,16 @@ public:
     void setType(const std::string& mentorType) { type = mentorType; }
 
     std::string getExpertise() const { return expertise; }
+
+    // Overloaded setExpertise method (Compile-time Polymorphism)
     void setExpertise(const std::string& mentorExpertise) { expertise = mentorExpertise; }
+    void setExpertise(const char* mentorExpertise) { expertise = std::string(mentorExpertise); }
+
+    // Overriding checkIn (Runtime Polymorphism)
+    void checkIn() override {
+        availability = true;
+        std::cout << name << " has checked in as Mentor." << std::endl;
+    }
 
     // Static function to display all mentors
     static void displayMentors() {
@@ -101,7 +103,7 @@ std::vector<Mentor*> Mentor::mentorList;
 // Derived Class: Mentee
 class Mentee : public Person {
 private:
-    std::string type; // Technical or Program
+    std::string type;  // Technical or Program
     std::string expertise;
 
     static int menteeCount;
@@ -130,6 +132,12 @@ public:
     std::string getExpertise() const { return expertise; }
     void setExpertise(const std::string& menteeExpertise) { expertise = menteeExpertise; }
 
+    // Overriding checkIn (Runtime Polymorphism)
+    void checkIn() override {
+        availability = true;
+        std::cout << name << " has checked in as Mentee." << std::endl;
+    }
+
     // Static function to display all mentees
     static void displayMentees() {
         std::cout << "List of Mentees:" << std::endl;
@@ -152,47 +160,33 @@ std::vector<Mentee*> Mentee::menteeList;
 
 // Main function
 int main() {
-    // Creating Mentor objects
+    // Demonstrating Polymorphism
+    Person* people[2];
+
     Mentor mentor1;
     mentor1.setName("Alice");
     mentor1.setContactNumber("123-456-7890");
     mentor1.setType("Technical");
     mentor1.setExpertise("C++");
 
-    Mentor mentor2;
-    mentor2.setName("Bob");
-    mentor2.setContactNumber("987-654-3210");
-    mentor2.setType("Program");
-    mentor2.setExpertise("Java");
-
-    // Creating Mentee objects
     Mentee mentee1;
     mentee1.setName("Charlie");
     mentee1.setContactNumber("111-222-3333");
     mentee1.setType("Technical");
     mentee1.setExpertise("Python");
 
-    Mentee mentee2;
-    mentee2.setName("David");
-    mentee2.setContactNumber("444-555-6666");
-    mentee2.setType("Program");
-    mentee2.setExpertise("Data Science");
+    // Array of base class pointers for polymorphic behavior
+    people[0] = &mentor1;
+    people[1] = &mentee1;
 
-    // Checking in mentors and mentees
-    mentor1.checkIn();
-    mentee1.checkIn();
+    // Demonstrating runtime polymorphism
+    for (int i = 0; i < 2; ++i) {
+        people[i]->checkIn(); // Calls the overridden checkIn method
+    }
 
     // Display lists of Mentors and Mentees
     Mentor::displayMentors();
     Mentee::displayMentees();
-
-    // Display counts
-    std::cout << "Total Mentors: " << Mentor::getMentorCount() << std::endl;
-    std::cout << "Total Mentees: " << Mentee::getMenteeCount() << std::endl;
-
-    // Checking out a person
-    mentor1.checkOut();
-    mentee1.checkOut();
 
     return 0;
 }
