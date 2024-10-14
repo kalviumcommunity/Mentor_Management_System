@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <string>
 
-// Base Class (Person)
+// Base Class (Person) - Abstract Class
 class Person {
 protected:
     std::string name;
@@ -14,7 +14,7 @@ public:
     // Constructor
     Person() : availability(false) {}
 
-    // Destructor
+    // Virtual Destructor (important in abstract classes)
     virtual ~Person() {}
 
     // Accessor and Mutator Methods
@@ -26,16 +26,13 @@ public:
 
     bool isAvailable() const { return availability; }
 
-    // Virtual method to check-in a person (can be overridden)
-    virtual void checkIn() {
-        availability = true;
-        std::cout << name << " has checked in (Person)." << std::endl;
-    }
+    // Pure virtual method - makes Person an abstract class
+    virtual void checkIn() = 0;  // Must be implemented in derived classes
 
-    // Virtual method to check-out a person (can be overridden)
+    // Virtual method for checking out a person
     virtual void checkOut() {
         availability = false;
-        std::cout << name << " has checked out (Person)." << std::endl;
+        std::cout << name << " has checked out." << std::endl;
     }
 };
 
@@ -69,12 +66,9 @@ public:
     void setType(const std::string& mentorType) { type = mentorType; }
 
     std::string getExpertise() const { return expertise; }
-
-    // Overloaded setExpertise method (Compile-time Polymorphism)
     void setExpertise(const std::string& mentorExpertise) { expertise = mentorExpertise; }
-    void setExpertise(const char* mentorExpertise) { expertise = std::string(mentorExpertise); }
 
-    // Overriding checkIn (Runtime Polymorphism)
+    // Overriding pure virtual method checkIn from Person (Runtime Polymorphism)
     void checkIn() override {
         availability = true;
         std::cout << name << " has checked in as Mentor." << std::endl;
@@ -132,7 +126,7 @@ public:
     std::string getExpertise() const { return expertise; }
     void setExpertise(const std::string& menteeExpertise) { expertise = menteeExpertise; }
 
-    // Overriding checkIn (Runtime Polymorphism)
+    // Overriding pure virtual method checkIn from Person (Runtime Polymorphism)
     void checkIn() override {
         availability = true;
         std::cout << name << " has checked in as Mentee." << std::endl;
@@ -160,28 +154,48 @@ std::vector<Mentee*> Mentee::menteeList;
 
 // Main function
 int main() {
-    // Demonstrating Polymorphism
-    Person* people[2];
+    int personType;
+    std::string name, contact, type, expertise;
 
-    Mentor mentor1;
-    mentor1.setName("Alice");
-    mentor1.setContactNumber("123-456-7890");
-    mentor1.setType("Technical");
-    mentor1.setExpertise("C++");
-
-    Mentee mentee1;
-    mentee1.setName("Charlie");
-    mentee1.setContactNumber("111-222-3333");
-    mentee1.setType("Technical");
-    mentee1.setExpertise("Python");
-
-    // Array of base class pointers for polymorphic behavior
-    people[0] = &mentor1;
-    people[1] = &mentee1;
-
-    // Demonstrating runtime polymorphism
+    std::cout << "Enter details for Mentor or Mentee\n";
+    
+    // Loop to handle multiple people input
     for (int i = 0; i < 2; ++i) {
-        people[i]->checkIn(); // Calls the overridden checkIn method
+        std::cout << "Enter 1 for Mentor, 2 for Mentee: ";
+        std::cin >> personType;
+        std::cin.ignore();  // Ignore any newline characters left in the input buffer
+
+        std::cout << "Enter name: ";
+        std::getline(std::cin, name);
+
+        std::cout << "Enter contact number: ";
+        std::getline(std::cin, contact);
+
+        std::cout << "Enter type (Technical/Program): ";
+        std::getline(std::cin, type);
+
+        std::cout << "Enter expertise: ";
+        std::getline(std::cin, expertise);
+
+        if (personType == 1) {
+            // Create a Mentor
+            Mentor* mentor = new Mentor();
+            mentor->setName(name);
+            mentor->setContactNumber(contact);
+            mentor->setType(type);
+            mentor->setExpertise(expertise);
+            mentor->checkIn();
+        } else if (personType == 2) {
+            // Create a Mentee
+            Mentee* mentee = new Mentee();
+            mentee->setName(name);
+            mentee->setContactNumber(contact);
+            mentee->setType(type);
+            mentee->setExpertise(expertise);
+            mentee->checkIn();
+        } else {
+            std::cout << "Invalid option. Please enter either 1 or 2." << std::endl;
+        }
     }
 
     // Display lists of Mentors and Mentees
