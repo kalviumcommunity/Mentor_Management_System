@@ -51,15 +51,18 @@ public:
     bool isAvailable() const { return availability; }
 
     // Delegated check-in method (uses the strategy object)
-    void checkIn() {
+    virtual void checkIn() {
         availability = true;
         checkInBehavior->checkIn(name);
     }
 
-    void checkOut() {
+    virtual void checkOut() {
         availability = false;
         std::cout << name << " has checked out." << std::endl;
     }
+
+    virtual std::string getType() const = 0;
+    virtual std::string getExpertise() const = 0;
 };
 
 // Derived Class: Mentor
@@ -72,10 +75,10 @@ public:
     // Constructor that sets Mentor-specific check-in behavior
     Mentor() : Person(new MentorCheckIn()) {}
 
-    std::string getType() const { return type; }
+    std::string getType() const override { return type; }
     void setType(const std::string& mentorType) { type = mentorType; }
 
-    std::string getExpertise() const { return expertise; }
+    std::string getExpertise() const override { return expertise; }
     void setExpertise(const std::string& mentorExpertise) { expertise = mentorExpertise; }
 };
 
@@ -89,56 +92,34 @@ public:
     // Constructor that sets Mentee-specific check-in behavior
     Mentee() : Person(new MenteeCheckIn()) {}
 
-    std::string getType() const { return type; }
+    std::string getType() const override { return type; }
     void setType(const std::string& menteeType) { type = menteeType; }
 
-    std::string getExpertise() const { return expertise; }
+    std::string getExpertise() const override { return expertise; }
     void setExpertise(const std::string& menteeExpertise) { expertise = menteeExpertise; }
 };
 
-// Manager Class: MentorManager
-class MentorManager {
+// Manager Class: PersonManager (Supports LSP)
+class PersonManager {
 private:
-    static std::vector<Mentor*> mentorList;
+    static std::vector<Person*> personList;
 
 public:
-    static void addMentor(Mentor* mentor) {
-        mentorList.push_back(mentor);
+    static void addPerson(Person* person) {
+        personList.push_back(person);
     }
 
-    static void displayMentors() {
-        std::cout << "List of Mentors:" << std::endl;
-        for (const auto& mentor : mentorList) {
-            std::cout << "Name: " << mentor->getName() << ", Type: " << mentor->getType()
-                      << ", Expertise: " << mentor->getExpertise()
-                      << ", Contact: " << mentor->getContactNumber() << std::endl;
+    static void displayPersons() {
+        std::cout << "List of Persons:" << std::endl;
+        for (const auto& person : personList) {
+            std::cout << "Name: " << person->getName() << ", Type: " << person->getType()
+                      << ", Expertise: " << person->getExpertise()
+                      << ", Contact: " << person->getContactNumber() << std::endl;
         }
     }
 };
 
-std::vector<Mentor*> MentorManager::mentorList;
-
-// Manager Class: MenteeManager
-class MenteeManager {
-private:
-    static std::vector<Mentee*> menteeList;
-
-public:
-    static void addMentee(Mentee* mentee) {
-        menteeList.push_back(mentee);
-    }
-
-    static void displayMentees() {
-        std::cout << "List of Mentees:" << std::endl;
-        for (const auto& mentee : menteeList) {
-            std::cout << "Name: " << mentee->getName() << ", Type: " << mentee->getType()
-                      << ", Expertise: " << mentee->getExpertise()
-                      << ", Contact: " << mentee->getContactNumber() << std::endl;
-        }
-    }
-};
-
-std::vector<Mentee*> MenteeManager::menteeList;
+std::vector<Person*> PersonManager::personList;
 
 // Main function
 int main() {
@@ -171,7 +152,7 @@ int main() {
             mentor->setType(type);
             mentor->setExpertise(expertise);
             mentor->checkIn();
-            MentorManager::addMentor(mentor);
+            PersonManager::addPerson(mentor);
         } else if (personType == 2) {
             Mentee* mentee = new Mentee();
             mentee->setName(name);
@@ -179,14 +160,13 @@ int main() {
             mentee->setType(type);
             mentee->setExpertise(expertise);
             mentee->checkIn();
-            MenteeManager::addMentee(mentee);
+            PersonManager::addPerson(mentee);
         } else {
             std::cout << "Invalid option. Please enter either 1 or 2." << std::endl;
         }
     }
 
-    MentorManager::displayMentors();
-    MenteeManager::displayMentees();
+    PersonManager::displayPersons();
 
     return 0;
 }
